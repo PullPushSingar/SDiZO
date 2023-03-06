@@ -10,24 +10,24 @@ using namespace std;
 vector<int> readCsvFile(string fileName);
 void printIntArray(const int* arr, int n);
 int* createIntArrayFromVector(const std::vector<int>& vec, int n);
-void bubbleSort(int* arr, int n);
 void startTimer();
 long long stopTimer();
 void saveArrayToCsv(const std::string& filename, int arr[], int n);
+long long bubbleSort(int arr[], int n);
 
 int main() {
 
 
     long long timer;
     vector<int> Numbers = readCsvFile(R"(C:\Users\huber\Desktop\0STUDIA\SDIZO\SDiZO\Zadanie1\liczby.txt)");
-    int *arrayOfNumbers = createIntArrayFromVector(Numbers, 100000);
+    int *arrayOfNumbers = createIntArrayFromVector(Numbers, 1000000);
     startTimer();
   //  printIntArray(arrayOfNumbers,1000000);
-    bubbleSort(arrayOfNumbers, 100000);
+     long long  numberOfIterations =  bubbleSort(arrayOfNumbers, 1000000);
    // printIntArray(arrayOfNumbers,1000000);
     timer = stopTimer();
-    cout << "Sortowanie zajelo " << timer << "ns" ;
-    saveArrayToCsv("Wynik.csv",arrayOfNumbers,100000);
+    cout << "Sortowanie zajelo " << timer << " ns " << " oraz " << numberOfIterations << " iteracji";
+    saveArrayToCsv(R"(C:\Users\huber\Desktop\0STUDIA\SDIZO\SDiZO\Zadanie1\Wynik.csv)",arrayOfNumbers,1000000);
 
 
     delete[] arrayOfNumbers;
@@ -71,20 +71,26 @@ void printIntArray(const int* arr, int n) {
     std::cout << std::endl;
 }
 
-void bubbleSort(int* arr, int n) {
+
+long long bubbleSort(int arr[], int n) {
+    long long  iterations = 0;
     bool swapped;
-    for (int i = 0; i < n-1; i++) {
+
+    for (int i = 0; i < n - 1; i++) {
         swapped = false;
-        for (int j = 0; j < n-i-1; j++) {
-            if (arr[j] > arr[j+1]) {
-                std::swap(arr[j], arr[j+1]);
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                std::swap(arr[j], arr[j + 1]);
                 swapped = true;
             }
+            iterations++;
         }
-        if (!swapped) {
+        if (swapped == false) {
             break;
         }
     }
+
+    return iterations;
 }
 
 void startTimer() {
