@@ -20,9 +20,6 @@ struct  Config{
 };
 
 Config readCfgFile(string fileName);
-
-
-
 vector<int> readCsvFile(string fileName);
 void printIntArray(const int* arr, int n);
 int* createIntArrayFromVector(const std::vector<int>& vec, int n);
@@ -30,18 +27,21 @@ void startTimer();
 long long stopTimer();
 void saveArrayToCsv(const std::string& filename, int arr[], int n);
 long long bubbleSort(int arr[], int n);
+long long cocktailSort( int  arr[], int n);
+long long combSort(int  arr[], int n);
 
 
 
 int main() {
 
-    Config config = readCfgFile(R"(C:\Users\huber\Desktop\0STUDIA\SDIZO\SDiZO\Zadanie1\Config.cfg)");
+    const Config config = readCfgFile(R"(C:\Users\huber\Desktop\0STUDIA\SDIZO\SDiZO\Zadanie1\Config.cfg)");
 
     long long timer;
     vector<int> Numbers = readCsvFile(config.numbersFilePath);
     int *arrayOfNumbers = createIntArrayFromVector(Numbers, config.numberOfElements);
     startTimer();
-    long long  numberOfIterations =  bubbleSort(arrayOfNumbers, config.numberOfElements);
+//    long long  numberOfIterations =  bubbleSort(arrayOfNumbers, config.numberOfElements);
+    long long  numberOfIterations =  cocktailSort(arrayOfNumbers, config.numberOfElements);
     timer = stopTimer();
     cout << "Sortowanie zajelo " << timer << " ns " << " oraz " << numberOfIterations << " iteracji";
     saveArrayToCsv(config.outputFile,arrayOfNumbers,config.numberOfElements);
@@ -102,17 +102,17 @@ Config readCfgFile(string fileName) {
 
 
 vector<int> readCsvFile(string fileName) {
-    ifstream plik(fileName);
-    vector<int> liczby;
+    ifstream csvFile(fileName);
+    vector<int> numbersVector;
 
-    if (plik.is_open()) {
-        string linia;
-        while (getline(plik, linia)) {
-            stringstream ss(linia);
-            string wartosc;
-            while (getline(ss, wartosc, ',')) {
-                int liczba = stoi(wartosc);
-                liczby.push_back(liczba);
+    if (csvFile.is_open()) {
+        string line;
+        while (getline(csvFile, line)) {
+            stringstream ss(line);
+            string value;
+            while (getline(ss, value, ',')) {
+                int number = stoi(value);
+                numbersVector.push_back(number);
             }
         }
     }   else {
@@ -120,8 +120,8 @@ vector<int> readCsvFile(string fileName) {
         cout << "Nie udało się otworzyć pliku. Kod błędu: " << ec.value() << ", komunikat: " << ec.message() << endl;
         exit(0);
     }
-    plik.close();
-    return liczby;
+    csvFile.close();
+    return numbersVector;
 }
 
 int* createIntArrayFromVector(const std::vector<int>& vec, int n) {
@@ -138,8 +138,6 @@ void printIntArray(const int* arr, int n) {
     }
     std::cout << std::endl;
 }
-
-
 long long bubbleSort(int arr[], int n) {
     long long  iterations = 0;
     bool swapped;
@@ -161,16 +159,48 @@ long long bubbleSort(int arr[], int n) {
     return iterations;
 }
 
+long long cocktailSort(int *arr, int n) {
+    int bottom = 0;
+    int top = n-1;
+    bool change = true;
+    long long iterations = 0;
+
+    while(change) {
+        change = false;
+        for (int i = bottom; i < top; i++) {
+            if (arr[i] > arr[i + 1]) {
+                std::swap(arr[i], arr[i + 1]);
+                change = true;
+                iterations +=1;
+            }
+        }
+
+
+        top = top - 1;
+        for (int i = top; i > bottom; i--) {
+            if (arr[i] < arr[i - 1]) {
+                std::swap(arr[i], arr[i - 1]);
+                change = true;
+                iterations +=1;
+            }
+        }
+        bottom += 1;
+
+    }
+
+    return iterations;
+
+
+}
+
 void startTimer() {
     start_time = std::chrono::high_resolution_clock::now();
 }
-
 long long stopTimer() {
     std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
     auto elapsed_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
     return elapsed_time;
 }
-
 void saveArrayToCsv(const std::string& filename, int arr[], int n) {
     std::ofstream outfile(filename);
 
