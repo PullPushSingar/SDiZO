@@ -26,9 +26,12 @@ int* createIntArrayFromVector(const std::vector<int>& vec, int n);
 void startTimer();
 long long stopTimer();
 void saveArrayToCsv(const std::string& filename, int arr[], int n);
-long long bubbleSort(int arr[], int n);
-long long cocktailSort( int  arr[], int n);
-long long combSort(int  arr[], int n);
+long long bubbleSort(int *arr, int n);
+long long insertSort(int  *arr, int n);
+long long selectionSort( int  *arr, int n);
+long long cocktailSort(int  *arr, int n);
+
+long long combSort(int  *arr, int n);
 
 
 
@@ -40,8 +43,9 @@ int main() {
     vector<int> Numbers = readCsvFile(config.numbersFilePath);
     int *arrayOfNumbers = createIntArrayFromVector(Numbers, config.numberOfElements);
     startTimer();
-//    long long  numberOfIterations =  bubbleSort(arrayOfNumbers, config.numberOfElements);
-    long long  numberOfIterations =  cocktailSort(arrayOfNumbers, config.numberOfElements);
+    long long  numberOfIterations =  bubbleSort(arrayOfNumbers, config.numberOfElements);
+    numberOfIterations =  cocktailSort(arrayOfNumbers, config.numberOfElements);
+    numberOfIterations =  selectionSort(arrayOfNumbers, config.numberOfElements);
     timer = stopTimer();
     cout << "Sortowanie zajelo " << timer << " ns " << " oraz " << numberOfIterations << " iteracji";
     saveArrayToCsv(config.outputFile,arrayOfNumbers,config.numberOfElements);
@@ -97,10 +101,6 @@ Config readCfgFile(string fileName) {
         return config;
 
 }
-
-
-
-
 vector<int> readCsvFile(string fileName) {
     ifstream csvFile(fileName);
     vector<int> numbersVector;
@@ -123,7 +123,6 @@ vector<int> readCsvFile(string fileName) {
     csvFile.close();
     return numbersVector;
 }
-
 int* createIntArrayFromVector(const std::vector<int>& vec, int n) {
     int* arr = new int[n];
     for (int i = 0; i < n; i++) {
@@ -131,7 +130,6 @@ int* createIntArrayFromVector(const std::vector<int>& vec, int n) {
     }
     return arr;
 }
-
 void printIntArray(const int* arr, int n) {
     for (int i = 0; i < n; i++) {
         std::cout << arr[i] << " ";
@@ -158,13 +156,23 @@ long long bubbleSort(int arr[], int n) {
 
     return iterations;
 }
-
+long long insertSort(int *arr, int n) {
+    long long iterations = 0;
+    for (int i = 1 ; i < n; i++) {
+        for (int j = i - 1; i >= 0 ; i --  ){
+            iterations +=1;
+            if (arr[j + 1] < arr[j]){
+                std::swap(arr[j + 1],arr[j]);
+            }else break;
+        }
+    }
+    return iterations;
+}
 long long cocktailSort(int *arr, int n) {
     int bottom = 0;
     int top = n-1;
     bool change = true;
     long long iterations = 0;
-
     while(change) {
         change = false;
         for (int i = bottom; i < top; i++) {
@@ -192,7 +200,24 @@ long long cocktailSort(int *arr, int n) {
 
 
 }
+long long selectionSort(int *arr, int n) {
+    long long iterations = 0;
+    for (int k = 0; k < n - 2; k++){
+        int bottom = k;
+        for (int i = k; i < n; i ++){
+            iterations +=1;
+            if (arr[i] < arr[bottom]) {
+                bottom = i;
+            }
+            std::swap(arr[k],arr[i]);
 
+
+
+        }
+
+    }
+   return iterations;
+}
 void startTimer() {
     start_time = std::chrono::high_resolution_clock::now();
 }
@@ -203,13 +228,11 @@ long long stopTimer() {
 }
 void saveArrayToCsv(const std::string& filename, int arr[], int n) {
     std::ofstream outfile(filename);
-
     for (int i = 0; i < n; i++) {
         outfile << arr[i];
         if (i < n - 1) {
             outfile << ",";
         }
     }
-
     outfile.close();
 }
