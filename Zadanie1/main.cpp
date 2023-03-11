@@ -1,9 +1,13 @@
 #include <iostream>
 #include <fstream>
+#include <random>
 #include <sstream>
 #include <vector>
 #include <algorithm>
 #include <chrono>
+#include <ctime>
+#include <thread>
+#include <future>
 
 
 std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
@@ -21,6 +25,9 @@ struct  Config{
 
 Config readCfgFile(string fileName);
 vector<int> readCsvFile(string fileName);
+
+
+
 void printIntArray(const int* arr, int n);
 int* createIntArrayFromVector(const std::vector<int>& vec, int n);
 void startTimer();
@@ -31,11 +38,9 @@ long long insertSort(int  *arr, int n);
 long long selectionSort( int  *arr, int n);
 long long cocktailSort(int  *arr, int n);
 long long quickSort(int *arr, int n);
-
-
-
+long long bogoSort(int *arr, int n);
+bool isSorted(const int *arr, int n);
 long long countingSort(int *arr, int n);
-
 long long combSort(int  *arr, int n);
 
 
@@ -47,6 +52,7 @@ int main() {
     long long timer;
     vector<int> Numbers = readCsvFile(config.numbersFilePath);
     int *arrayOfNumbers = createIntArrayFromVector(Numbers, config.numberOfElements);
+
     startTimer();
     long long  numberOfIterations =  bubbleSort(arrayOfNumbers, config.numberOfElements);
     numberOfIterations =  cocktailSort(arrayOfNumbers, config.numberOfElements);
@@ -57,7 +63,6 @@ int main() {
     delete[] arrayOfNumbers;
     return 0;
 }
-
 Config readCfgFile(string fileName) {
     ifstream configFile(fileName);
     Config config;
@@ -187,8 +192,6 @@ long long cocktailSort(int *arr, int n) {
                 iterations +=1;
             }
         }
-
-
         top = top - 1;
         for (int i = top; i > bottom; i--) {
             if (arr[i] < arr[i - 1]) {
@@ -198,12 +201,8 @@ long long cocktailSort(int *arr, int n) {
             }
         }
         bottom += 1;
-
     }
-
     return iterations;
-
-
 }
 long long selectionSort(int *arr, int n) {
     long long iterations = 0;
@@ -226,6 +225,22 @@ long long selectionSort(int *arr, int n) {
 long long quickSort(int *arr, int n) {
     return 0;
 }
+bool isSorted(const int *arr, int n) {
+    for (int i = 0; i < n - 1; i++) {
+        if (arr[i] > arr[i+1]) {
+            return false;
+        }
+    }
+    return true;
+}
+long long bogoSort(int *arr, int n) {
+    long long iterations = 0;
+    while (!isSorted(arr, n)) {
+        iterations +=1;
+        shuffle(arr, arr+n, std::mt19937(std::random_device()()));
+    }
+    return iterations;
+}
 void startTimer() {
     start_time = std::chrono::high_resolution_clock::now();
 }
@@ -244,3 +259,9 @@ void saveArrayToCsv(const std::string& filename, int arr[], int n) {
     }
     outfile.close();
 }
+
+
+
+
+
+
