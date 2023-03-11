@@ -36,50 +36,34 @@ long long bubbleSort(int arr[], int n);
 int main() {
 
     Config config = readCfgFile(R"(C:\Users\huber\Desktop\0STUDIA\SDIZO\SDiZO\Zadanie1\Config.cfg)");
-//    cout << config.numberOfElements << endl;
-//    cout << config.algorithmName << endl;
 
-//    cout << config.numbersFilePath << endl;
-//    cout << config.outputFile << endl;
-//    cout << config.algorithmName << endl;
-//    cout << config.numberOfElements << endl;
-
-
-
-//    long long timer;
-//    vector<int> Numbers = readCsvFile(R"(C:\Users\huber\Desktop\0STUDIA\SDIZO\SDiZO\Zadanie1\liczby.txt)");
-//    int *arrayOfNumbers = createIntArrayFromVector(Numbers, 100000);
-//    startTimer();
-//  //  printIntArray(arrayOfNumbers,1000000);
-//     long long  numberOfIterations =  bubbleSort(arrayOfNumbers, 100000);
-//   // printIntArray(arrayOfNumbers,1000000);
-//    timer = stopTimer();
-//    cout << "Sortowanie zajelo " << timer << " ns " << " oraz " << numberOfIterations << " iteracji";
-//    saveArrayToCsv(R"(C:\Users\huber\Desktop\0STUDIA\SDIZO\SDiZO\Zadanie1\Wynik.csv)",arrayOfNumbers,100000);
-//
-//
-//    delete[] arrayOfNumbers;
-//    return 0;
+    long long timer;
+    vector<int> Numbers = readCsvFile(config.numbersFilePath);
+    int *arrayOfNumbers = createIntArrayFromVector(Numbers, config.numberOfElements);
+    startTimer();
+    long long  numberOfIterations =  bubbleSort(arrayOfNumbers, config.numberOfElements);
+    timer = stopTimer();
+    cout << "Sortowanie zajelo " << timer << " ns " << " oraz " << numberOfIterations << " iteracji";
+    saveArrayToCsv(config.outputFile,arrayOfNumbers,config.numberOfElements);
+    delete[] arrayOfNumbers;
+    return 0;
 }
 
 Config readCfgFile(string fileName) {
     ifstream configFile(fileName);
     Config config;
+    string  linia;
     if (configFile.is_open())
     {
-
-        string linia;
         while(getline(configFile,linia))
         {
 
             if (linia.find("Plik z danymi    :") != string::npos){
 
             string text = "Plik z danymi    :";
-            size_t pos = linia.find(text);
-
+            size_t  pos = linia.find(text);
             string  path = linia.erase(pos,text.length());
             config.numbersFilePath = path;
-            cout << path;
             }
             if (linia.find("Plik z wynikami  :") != string::npos){
                 string text = "Plik z wynikami  :";
@@ -102,26 +86,20 @@ Config readCfgFile(string fileName) {
 
         }
 
+
         }
-
-//        cout << config.numbersFilePath << endl;
-//        cout << config.outputFile << endl;
-//        cout << config.algorithmName << endl;
-//        cout << config.numberOfElements << endl;
-
-
-
-
-        else{
+    else {
         std::error_code ec = std::make_error_code(std::errc::io_error);
-        cout << "Nie udało się otworzyć pliku. Kod błędu: " << ec.value()<< ", komunikat: " << ec.message()<<endl;
+        cout << "Nie udało się otworzyć pliku. Kod błędu: " << ec.value() << ", komunikat: " << ec.message() << endl;
         exit(0);
+    }
+        configFile.close();
         return config;
 
 }
 
 
-}
+
 
 vector<int> readCsvFile(string fileName) {
     ifstream plik(fileName);
