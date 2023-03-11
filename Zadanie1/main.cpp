@@ -30,6 +30,11 @@ long long bubbleSort(int *arr, int n);
 long long insertSort(int  *arr, int n);
 long long selectionSort( int  *arr, int n);
 long long cocktailSort(int  *arr, int n);
+long long quickSort(int *arr, int n);
+
+
+
+long long countingSort(int *arr, int n);
 
 long long combSort(int  *arr, int n);
 
@@ -217,6 +222,9 @@ long long selectionSort(int *arr, int n) {
 
     }
    return iterations;
+}
+long long quickSort(int *arr, int n) {
+    return 0;
 }
 void startTimer() {
     start_time = std::chrono::high_resolution_clock::now();
