@@ -1,0 +1,5 @@
+BubbleSort 10000 771440200ns 50004997 iteracji
+BubbleSort 10000 848554400ns 50004997 iteracji
+BubbleSort 10000 402900ns 0 iteracji
+bubbleSort 100000 35679731600ns 4999795710 iteracji
+bubbleSort 100000 34427142500ns 4999795710 iteracji

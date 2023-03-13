@@ -7,7 +7,8 @@
 #include <chrono>
 #include <ctime>
 #include <thread>
-#include <future>
+#include <conio.h>
+
 
 
 std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
@@ -17,6 +18,7 @@ struct  Config{
     string numbersFilePath;
     string outputFile;
     string algorithmName;
+    string timeResultPath;
     int numberOfElements;
 
 
@@ -32,7 +34,8 @@ void printIntArray(const int* arr, int n);
 int* createIntArrayFromVector(const std::vector<int>& vec, int n);
 void startTimer();
 long long stopTimer();
-void saveArrayToCsv(const std::string& filename, int arr[], int n);
+void saveArrayToCsv(Config config, int arr[], int n);
+void saveTimeToScv(Config config, long long time, long long numberOfIteration);
 long long bubbleSort(int *arr, int n);
 long long insertSort(int  *arr, int n);
 long long selectionSort( int  *arr, int n);
@@ -42,24 +45,47 @@ long long bogoSort(int *arr, int n);
 bool isSorted(const int *arr, int n);
 long long countingSort(int *arr, int n);
 long long combSort(int  *arr, int n);
+void progressAnimation();
+
 
 
 
 int main() {
 
     const Config config = readCfgFile(R"(C:\Users\huber\Desktop\0STUDIA\SDIZO\SDiZO\Zadanie1\Config.cfg)");
-
     long long timer;
     vector<int> Numbers = readCsvFile(config.numbersFilePath);
     int *arrayOfNumbers = createIntArrayFromVector(Numbers, config.numberOfElements);
-
     startTimer();
-    long long  numberOfIterations =  bubbleSort(arrayOfNumbers, config.numberOfElements);
-    numberOfIterations =  cocktailSort(arrayOfNumbers, config.numberOfElements);
-    numberOfIterations =  selectionSort(arrayOfNumbers, config.numberOfElements);
+    long long numberOfIterations = 0;
+    std::thread t(progressAnimation);
+    if (config.algorithmName == "bubbleSort"){
+        numberOfIterations = bubbleSort(arrayOfNumbers,config.numberOfElements);
+    }
+    else if (config.algorithmName == "insertSort"){
+        numberOfIterations = insertSort(arrayOfNumbers,config.numberOfElements);
+    }
+    else if (config.algorithmName == "selectionSort"){
+        numberOfIterations = selectionSort(arrayOfNumbers,config.numberOfElements);
+    }
+    else if (config.algorithmName == "cocktailSort"){
+        numberOfIterations = cocktailSort(arrayOfNumbers,config.numberOfElements);
+    }
+    else if (config.algorithmName == "bogoSort"){
+        numberOfIterations = bogoSort(arrayOfNumbers,config.numberOfElements);
+    }
+    else {
+        cout << "Podano zly algorytm";
+        exit(100);
+    }
     timer = stopTimer();
+    if(numberOfIterations != 0){
+        t.detach();
+
+    }
     cout << "Sortowanie zajelo " << timer << " ns " << " oraz " << numberOfIterations << " iteracji";
-    saveArrayToCsv(config.outputFile,arrayOfNumbers,config.numberOfElements);
+    saveArrayToCsv(config,arrayOfNumbers,config.numberOfElements);
+    saveTimeToScv(config,timer,numberOfIterations);
     delete[] arrayOfNumbers;
     return 0;
 }
@@ -72,30 +98,36 @@ Config readCfgFile(string fileName) {
         while(getline(configFile,linia))
         {
 
-            if (linia.find("Plik z danymi    :") != string::npos){
-
-            string text = "Plik z danymi    :";
+            if (linia.find("Plik z danymi         :") != string::npos){
+            string text = "Plik z danymi         :";
             size_t  pos = linia.find(text);
             string  path = linia.erase(pos,text.length());
             config.numbersFilePath = path;
             }
-            if (linia.find("Plik z wynikami  :") != string::npos){
-                string text = "Plik z wynikami  :";
+            if (linia.find("Posortowane elementy  :") != string::npos){
+                string text = "Posortowane elementy  :";
                 size_t pos = linia.find(text);
                 string  path = linia.erase(pos,text.length());
                 config.outputFile = path;
             }
-            if (linia.find("Algorytm:        :") != string::npos){
-                string text = "Algorytm:        :";
+            if (linia.find("Algorytm:             :") != string::npos){
+                string text = "Algorytm:             :";
                 size_t pos = linia.find(text);
                 string  alghorithm = linia.erase(pos,text.length());
                 config.algorithmName = alghorithm;
             }
-            if (linia.find("Rozmiar danych   :") != string::npos){
-                string text = "Rozmiar danych   :";
+            if (linia.find("Rozmiar danych        :") != string::npos){
+                string text = "Rozmiar danych        :";
                 size_t pos = linia.find(text);
                 string  elements = linia.erase(pos,text.length());
                 config.numberOfElements = stoi(elements);
+            }
+            if (linia.find("Wyniki czasowe        :") != string::npos){
+                string text = "Wyniki czasowe        :";
+                size_t pos = linia.find(text);
+                string  path = linia.erase(pos,text.length());
+                config.timeResultPath = path;
+
             }
 
         }
@@ -249,8 +281,11 @@ long long stopTimer() {
     auto elapsed_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
     return elapsed_time;
 }
-void saveArrayToCsv(const std::string& filename, int arr[], int n) {
-    std::ofstream outfile(filename);
+void saveArrayToCsv( Config config, int arr[], int n) {
+    string path;
+
+    path = config.outputFile + "\\" + config.algorithmName + "" + std::to_string(config.numberOfElements) + ".csv";
+    std::ofstream outfile(path);
     for (int i = 0; i < n; i++) {
         outfile << arr[i];
         if (i < n - 1) {
@@ -260,8 +295,79 @@ void saveArrayToCsv(const std::string& filename, int arr[], int n) {
     outfile.close();
 }
 
+void saveTimeToScv(Config config, long long time, long long numberOfIteration) {
+    string path;
 
+    path = config.timeResultPath + "\\TimeAndIteration.csv";
+    std::ofstream outfile;
+    outfile.open(path, ios::app);
+    outfile  << config.algorithmName << " " << std::to_string(config.numberOfElements) << " " << std::to_string(time) << "ns " <<std::to_string(numberOfIteration) << " iteracji" << "\n";
+    outfile.close();
 
+}
 
+void progressAnimation() {
+
+    int anime = 0;
+    while (true){
+        system("cls");
+        if (anime == 0){
+            cout << "    +---+  \n";
+            cout << "        |  \n";
+            cout << "        |  \n";
+            cout << "        |  \n";
+            cout << "       === \n";
+        }
+        else if (anime == 1){
+            cout << "    +---+  \n";
+            cout << "    O   |  \n";
+            cout << "        |  \n";
+            cout << "        |  \n";
+            cout << "       === \n";
+        }
+        else if (anime == 2){
+            cout << "    +---+  \n";
+            cout << "    O   |  \n";
+            cout << "    |   |  \n";
+            cout << "        |  \n";
+            cout << "       === \n";
+        }
+        else if (anime == 3){
+            cout << "    +---+  \n";
+            cout << "    O   |  \n";
+            cout << "   /|   |  \n";
+            cout << "        |  \n";
+            cout << "       === \n";
+        }
+        else  if (anime == 4){
+            cout << "    +---+  \n";
+            cout << "    O   |  \n";
+            cout << "   /|\\  |  \n";
+            cout << "        |  \n";
+            cout << "       === \n";
+        }
+        else if (anime == 5){
+            cout << "    +---+  \n";
+            cout << "    O   |  \n";
+            cout << "   /|\\  |  \n";
+            cout << "   /    |  \n";
+            cout << "       === \n";
+        }
+        else if (anime == 6){
+            cout << "    +---+  \n";
+            cout << "    O   |  \n";
+            cout << "   /|\\  |  \n";
+            cout << "   / \\   |  \n";
+            cout << "       === \n";
+        }else {
+            anime = 0;
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+
+        anime +=1;
+
+    }
+}
 
 
