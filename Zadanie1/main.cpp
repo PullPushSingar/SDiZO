@@ -5,7 +5,6 @@
 #include <vector>
 #include <algorithm>
 #include <chrono>
-#include <ctime>
 #include <thread>
 #include <conio.h>
 
@@ -145,8 +144,6 @@ Config readCfgFile(string fileName) {
             }
 
         }
-
-
         }
     else {
         std::error_code ec = std::make_error_code(std::errc::io_error);

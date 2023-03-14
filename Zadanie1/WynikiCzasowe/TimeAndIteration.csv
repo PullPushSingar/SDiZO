@@ -10,3 +10,4 @@ bogoSort 10 16166189300ns 1190584 iteracji
 bogoSort 10 94867817900ns 6009025 iteracji
 bogoSort 10 38224868900ns 2775899 iteracji
 bogoSort 10 3418984700ns 234808 iteracji
+bubbleSort 100 24390700ns 4905 iteracji
