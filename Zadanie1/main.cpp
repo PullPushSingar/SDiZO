@@ -40,12 +40,13 @@ long long bubbleSort(int *arr, int n);
 long long insertSort(int  *arr, int n);
 long long selectionSort( int  *arr, int n);
 long long cocktailSort(int  *arr, int n);
-long long quickSort(int *arr, int n);
 long long bogoSort(int *arr, int n);
 bool isSorted(const int *arr, int n);
+void progressAnimation();
+// Jeszcze nie zrealizowane
+long long quickSort(int *arr, int n);
 long long countingSort(int *arr, int n);
 long long combSort(int  *arr, int n);
-void progressAnimation();
 
 
 
@@ -353,14 +354,14 @@ void progressAnimation() {
         else  if (anime == 4){
             cout << "    +---+  \n";
             cout << "    O   |  \n";
-            cout << "   /|\\ |  \n";
+            cout << "   /|\\  |  \n";
             cout << "        |  \n";
             cout << "       === \n";
         }
         else if (anime == 5){
             cout << "    +---+  \n";
             cout << "    O   |  \n";
-            cout << "   /|\\ |  \n";
+            cout << "   /|\\  |  \n";
             cout << "   /    |  \n";
             cout << "       === \n";
         }
@@ -368,7 +369,7 @@ void progressAnimation() {
             cout << "    +---+  \n";
             cout << "    O   |  \n";
             cout << "   /|\\  |  \n";
-            cout << "   / \\   |  \n";
+            cout << "   / \\  |  \n";
             cout << "       === \n";
         }else if (anime > 6) {
             anime = 0;
