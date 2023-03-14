@@ -58,7 +58,12 @@ int main() {
     int *arrayOfNumbers = createIntArrayFromVector(Numbers, config.numberOfElements);
     startTimer();
     long long numberOfIterations = 0;
+    std::system("cls");
+    cout << "Program sortuje algorytmem " << config.algorithmName <<endl;
+    cout << "Porgram sortuje " << config.numberOfElements << " liczb" <<endl;
     std::thread t(progressAnimation);
+
+
     if (config.algorithmName == "bubbleSort"){
         numberOfIterations = bubbleSort(arrayOfNumbers,config.numberOfElements);
     }
@@ -74,6 +79,8 @@ int main() {
     else if (config.algorithmName == "bogoSort"){
         numberOfIterations = bogoSort(arrayOfNumbers,config.numberOfElements);
     }
+
+
     else {
         cout << "Podano zly algorytm";
         exit(100);
@@ -83,7 +90,13 @@ int main() {
         t.detach();
 
     }
-    cout << "Sortowanie zajelo " << timer << " ns " << " oraz " << numberOfIterations << " iteracji";
+    if (isSorted(arrayOfNumbers,config.numberOfElements)){
+        cout << "Sortowanie Przebieglo prawidlowo" << endl;
+    }else {
+        cout << "Sortowanie przebieglo niepoprawnie" << endl;
+    }
+    cout << "Sortowanie zajelo " << timer << " ns " << endl;
+    cout << "Sortowanie zajelo " << numberOfIterations << " iteracji" << endl;
     saveArrayToCsv(config,arrayOfNumbers,config.numberOfElements);
     saveTimeToScv(config,timer,numberOfIterations);
     delete[] arrayOfNumbers;
@@ -247,8 +260,6 @@ long long selectionSort(int *arr, int n) {
             }
             std::swap(arr[k],arr[i]);
 
-
-
         }
 
     }
@@ -307,7 +318,7 @@ void saveTimeToScv(Config config, long long time, long long numberOfIteration) {
 }
 
 void progressAnimation() {
-
+    std::system("cls");
     int anime = 0;
     while (true){
         system("cls");
@@ -342,14 +353,14 @@ void progressAnimation() {
         else  if (anime == 4){
             cout << "    +---+  \n";
             cout << "    O   |  \n";
-            cout << "   /|\\  |  \n";
+            cout << "   /|\\ |  \n";
             cout << "        |  \n";
             cout << "       === \n";
         }
         else if (anime == 5){
             cout << "    +---+  \n";
             cout << "    O   |  \n";
-            cout << "   /|\\  |  \n";
+            cout << "   /|\\ |  \n";
             cout << "   /    |  \n";
             cout << "       === \n";
         }
@@ -359,11 +370,12 @@ void progressAnimation() {
             cout << "   /|\\  |  \n";
             cout << "   / \\   |  \n";
             cout << "       === \n";
-        }else {
+        }else if (anime > 6) {
             anime = 0;
         }
 
         std::this_thread::sleep_for(std::chrono::seconds(5));
+
 
         anime +=1;
 
