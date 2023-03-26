@@ -47,14 +47,17 @@ long long quickSort(int *arr, int n);
 
 
 
+
+
 long long bogoSort(int *arr, int n);
 bool isSorted(const int *arr, int n);
 void progressAnimation();
 void checkTime();
 void heapify(int *arr, int n , int i);
-long long quickSort(int *arr, int n);
+long long quickSort(int *arr, int low , int high);
 long long countingSort(int *arr, int n);
 long long combSort(int  *arr, int n);
+int partition( int arr[], int low, int high);
 
 
 
@@ -90,6 +93,10 @@ int main() {
     }
     else if (config.algorithmName == "heapSort"){
         numberOfIterations = heapSort(arrayOfNumbers,config.numberOfElements);
+    }
+    else if (config.algorithmName == "quickSort") {
+        int n = sizeof(arrayOfNumbers[0]) * config.numberOfElements / sizeof(arrayOfNumbers[0]);
+        numberOfIterations = quickSort(arrayOfNumbers, 0, n - 1);
     }
 
 
@@ -218,7 +225,7 @@ long long bubbleSort(int arr[], int n) {
             }
             iterations++;
         }
-        if (swapped == false) {
+        if (!swapped) {
             break;
         }
     }
@@ -279,8 +286,14 @@ long long selectionSort(int *arr, int n) {
     }
    return iterations;
 }
-long long quickSort(int *arr, int n) {
-    return 0;
+long long quickSort(int *arr, int low, int high) {
+
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+
 }
 bool isSorted(const int *arr, int n) {
     for (int i = 0; i < n - 1; i++) {
@@ -445,6 +458,20 @@ long long heapSort(int *arr, int n) {
         iteration +=1;
     }
     return  iteration;
+}
+
+int partition(int * arr, int low, int high) {
+    int pivot = arr[high];
+    int i = (low - 1);
+
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(arr[i],arr[j]);
+        }
+    }
+    swap(arr[i + 1],arr[high]);
+    return (i + 1);
 }
 
 

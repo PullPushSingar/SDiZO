@@ -42,3 +42,11 @@ heapSort 20 24465600ns 30 iteracji
 heapSort 1000000 575601500ns 1500000 iteracji
 heapSort 1000000 542614700ns 1500000 iteracji
 heapSort 1000000 613378600ns 1500000 iteracji
+quickSort 1000000 24082800ns 1 iteracji
+quickSort 1000000 22839400ns 1 iteracji
+quickSort 1000000 26112700ns 1 iteracji
+quickSort 1000000 25955200ns 2 iteracji
+quickSort 1000000 28640100ns 2 iteracji
+quickSort 1000000 265631700ns 999999 iteracji
+quickSort 1000000 222347700ns 999999 iteracji
+quickSort 1000000 282845600ns 999999 iteracji
