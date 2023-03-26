@@ -24,11 +24,10 @@ struct  Config{
 
 };
 
+const long long  timeStopNanoSeconds = 600000000000;
+
 Config readCfgFile(string fileName);
 vector<int> readCsvFile(string fileName);
-
-
-
 void printIntArray(const int* arr, int n);
 int* createIntArrayFromVector(const std::vector<int>& vec, int n);
 void startTimer();
@@ -42,7 +41,7 @@ long long cocktailSort(int  *arr, int n);
 long long bogoSort(int *arr, int n);
 bool isSorted(const int *arr, int n);
 void progressAnimation();
-// Jeszcze nie zrealizowane
+void checkTime();
 long long quickSort(int *arr, int n);
 long long countingSort(int *arr, int n);
 long long combSort(int  *arr, int n);
@@ -52,7 +51,7 @@ long long combSort(int  *arr, int n);
 
 int main() {
 
-    const Config config = readCfgFile(R"(C:\Users\huber\Desktop\0STUDIA\SDIZO\SDiZO\Zadanie1\Config.cfg)");
+    const Config config = readCfgFile(R"(..\Config.cfg)");
     long long timer;
     vector<int> Numbers = readCsvFile(config.numbersFilePath);
     int *arrayOfNumbers = createIntArrayFromVector(Numbers, config.numberOfElements);
@@ -61,7 +60,8 @@ int main() {
     std::system("cls");
     cout << "Program sortuje algorytmem " << config.algorithmName <<endl;
     cout << "Porgram sortuje " << config.numberOfElements << " liczb" <<endl;
-    std::thread t(progressAnimation);
+    std::thread animationThread(progressAnimation);
+    std::thread timeStopThread(checkTime);
 
 
     if (config.algorithmName == "bubbleSort"){
@@ -87,7 +87,7 @@ int main() {
     }
     timer = stopTimer();
     if(numberOfIterations != 0){
-        t.detach();
+        animationThread.detach();
 
     }
     if (isSorted(arrayOfNumbers,config.numberOfElements)){
@@ -102,6 +102,8 @@ int main() {
     delete[] arrayOfNumbers;
     return 0;
 }
+
+
 Config readCfgFile(string fileName) {
     ifstream configFile(fileName);
     Config config;
@@ -316,6 +318,7 @@ void saveTimeToScv(Config config, long long time, long long numberOfIteration) {
 }
 
 void progressAnimation() {
+    int deadConuter = 0;
     std::system("cls");
     int anime = 0;
     while (true){
@@ -370,6 +373,8 @@ void progressAnimation() {
             cout << "       === \n";
         }else if (anime > 6) {
             anime = 0;
+            deadConuter +=1;
+
         }
 
         std::this_thread::sleep_for(std::chrono::seconds(5));
@@ -378,6 +383,20 @@ void progressAnimation() {
         anime +=1;
 
     }
+}
+
+void checkTime() {
+    long long checkTimer = stopTimer();
+//600000000000
+    while (true) {
+        if (stopTimer() >= timeStopNanoSeconds) {
+            cout << "Upłyneło 10 minut zatem program zostanie zatrzymany" << endl;
+            exit(EXIT_FAILURE);
+            std::this_thread::sleep_for(std::chrono::seconds(10));
+        }
+    }
+
+
 }
 
 
