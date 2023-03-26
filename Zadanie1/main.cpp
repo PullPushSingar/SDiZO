@@ -43,8 +43,7 @@ long long selectionSort( int  *arr, int n);
 long long cocktailSort(int  *arr, int n);
 // O(nlgn) sort
 long long heapSort(int *arr, int n);
-long long quickSort(int *arr, int n);
-
+long long quickSort(int *arr, int low , int high);
 
 
 
@@ -54,10 +53,10 @@ bool isSorted(const int *arr, int n);
 void progressAnimation();
 void checkTime();
 void heapify(int *arr, int n , int i);
-long long quickSort(int *arr, int low , int high);
 long long countingSort(int *arr, int n);
 long long combSort(int  *arr, int n);
 int partition( int arr[], int low, int high);
+int getNextGap(int gab);
 
 
 
@@ -97,6 +96,9 @@ int main() {
     else if (config.algorithmName == "quickSort") {
         int n = sizeof(arrayOfNumbers[0]) * config.numberOfElements / sizeof(arrayOfNumbers[0]);
         numberOfIterations = quickSort(arrayOfNumbers, 0, n - 1);
+    }
+    else if (config.algorithmName == "combSort"){
+        numberOfIterations = combSort(arrayOfNumbers,config.numberOfElements);
     }
 
 
@@ -422,7 +424,6 @@ void checkTime() {
 
 
 }
-
 void heapify(int *arr, int n, int i) {
     int largest = i;
     int left =  2 * i + 1;
@@ -443,7 +444,6 @@ void heapify(int *arr, int n, int i) {
 
 
 }
-
 long long heapSort(int *arr, int n) {
     long long iteration = 0;
 
@@ -459,7 +459,6 @@ long long heapSort(int *arr, int n) {
     }
     return  iteration;
 }
-
 int partition(int * arr, int low, int high) {
     int pivot = arr[high];
     int i = (low - 1);
@@ -472,6 +471,36 @@ int partition(int * arr, int low, int high) {
     }
     swap(arr[i + 1],arr[high]);
     return (i + 1);
+}
+int getNextGap(int gap) {
+    gap = (gap * 10)/13;
+
+    if (gap < 1){
+        return  1;
+    }
+    return  gap;
+}
+long long combSort(int *arr, int n) {
+    long long iterations = 0;
+    int gap = n;
+    bool swapped = true;
+
+
+    while ( gap != 1 || swapped == true){
+        gap = getNextGap(gap);
+        swapped = false;
+
+        for (int i = 0; i < n - gap; i++){
+            if (arr[i] > arr[i + gap]){
+                swap(arr[i],arr[i + gap]);
+                swapped = true;
+                iterations +=1;
+            }
+
+        }
+
+    }
+    return iterations;
 }
 
 
