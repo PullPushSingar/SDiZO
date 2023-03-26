@@ -34,15 +34,20 @@ void startTimer();
 long long stopTimer();
 void saveArrayToCsv(Config config, int arr[], int n);
 void saveTimeToScv(Config config, long long time, long long numberOfIteration);
+
+
+// O(N^2) sort
 long long bubbleSort(int *arr, int n);
 long long insertSort(int  *arr, int n);
 long long selectionSort( int  *arr, int n);
 long long cocktailSort(int  *arr, int n);
-long long bogoSort(int *arr, int n);
+// O(nlgn) sort
 long long heapSort(int *arr, int n);
+long long quickSort(int *arr, int n);
 
 
 
+long long bogoSort(int *arr, int n);
 bool isSorted(const int *arr, int n);
 void progressAnimation();
 void checkTime();
@@ -67,7 +72,6 @@ int main() {
     cout << "Porgram sortuje " << config.numberOfElements << " liczb" <<endl;
     std::thread animationThread(progressAnimation);
     std::thread timeStopThread(checkTime);
-
 
     if (config.algorithmName == "bubbleSort"){
         numberOfIterations = bubbleSort(arrayOfNumbers,config.numberOfElements);
@@ -94,8 +98,10 @@ int main() {
         exit(100);
     }
     timer = stopTimer();
+    timeStopThread.detach();
     if(numberOfIterations != 0){
         animationThread.detach();
+
 
     }
     if (isSorted(arrayOfNumbers,config.numberOfElements)){
