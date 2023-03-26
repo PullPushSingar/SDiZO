@@ -39,9 +39,14 @@ long long insertSort(int  *arr, int n);
 long long selectionSort( int  *arr, int n);
 long long cocktailSort(int  *arr, int n);
 long long bogoSort(int *arr, int n);
+long long heapSort(int *arr, int n);
+
+
+
 bool isSorted(const int *arr, int n);
 void progressAnimation();
 void checkTime();
+void heapify(int *arr, int n , int i);
 long long quickSort(int *arr, int n);
 long long countingSort(int *arr, int n);
 long long combSort(int  *arr, int n);
@@ -78,6 +83,9 @@ int main() {
     }
     else if (config.algorithmName == "bogoSort"){
         numberOfIterations = bogoSort(arrayOfNumbers,config.numberOfElements);
+    }
+    else if (config.algorithmName == "heapSort"){
+        numberOfIterations = heapSort(arrayOfNumbers,config.numberOfElements);
     }
 
 
@@ -305,7 +313,6 @@ void saveArrayToCsv( Config config, int arr[], int n) {
     }
     outfile.close();
 }
-
 void saveTimeToScv(Config config, long long time, long long numberOfIteration) {
     string path;
 
@@ -316,7 +323,6 @@ void saveTimeToScv(Config config, long long time, long long numberOfIteration) {
     outfile.close();
 
 }
-
 void progressAnimation() {
     int deadConuter = 0;
     std::system("cls");
@@ -384,7 +390,6 @@ void progressAnimation() {
 
     }
 }
-
 void checkTime() {
     long long checkTimer = stopTimer();
 //600000000000
@@ -397,6 +402,43 @@ void checkTime() {
     }
 
 
+}
+
+void heapify(int *arr, int n, int i) {
+    int largest = i;
+    int left =  2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest]) {
+        largest = left;
+    }
+
+    if (right < n && arr[right] > arr[largest]) {
+        largest = right;
+    }
+
+    if (largest != i){
+        swap(arr[i],arr[largest]);
+        heapify(arr,n,largest);
+    }
+
+
+}
+
+long long heapSort(int *arr, int n) {
+    long long iteration = 0;
+
+    for (int i = (n/2) - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+        iteration +=1;
+
+    }
+    for (int i = n - 1; i >= 0; i--){
+        swap(arr[0],arr[i]);
+        heapify(arr,i,0);
+        iteration +=1;
+    }
+    return  iteration;
 }
 
 
