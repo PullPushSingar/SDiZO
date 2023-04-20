@@ -89,6 +89,7 @@ int main() {
 
         const Config config = readCfgFile(R"(..\Config.cfg)");
         long long timer;
+        std::thread main_thread((std::this_thread::get_id());
         vector<int> Numbers = readCsvFile(config.numbersFilePath);
         int *arrayOfNumbers = createIntArrayFromVector(Numbers, config.numberOfElements);
         startTimer();
@@ -131,10 +132,18 @@ int main() {
         } else {
             cout << "Sortowanie przebieglo niepoprawnie" << endl;
         }
+
+
         cout << "Sortowanie zajelo " << timer << " ns " << endl;
         cout << "Sortowanie zajelo " << numberOfIterations << " iteracji" << endl;
         saveArrayToCsv(config, arrayOfNumbers, config.numberOfElements);
         saveTimeToScv(config, timer, numberOfIterations);
+        if (timer <= TIME_STOP_NANO_SECONDS/300){
+            cout << "Sortowanie zajeło bardzo krótko" << endl;
+            cout << "Nacisnij jaki kolwiek przycisk na klawiaturze aby kontynuowac" << endl;
+            ::getchar();
+
+        }
         delete[] arrayOfNumbers;
     
     return 0;

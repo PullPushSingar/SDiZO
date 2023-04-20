@@ -25,3 +25,17 @@ countingSort 100000 4091900ns 2000 iteracji
 countingSort 100000 3715100ns 2000 iteracji
 countingSort 100000 4408000ns 2000 iteracji
 heapSort 1000000 345445300ns 1500000 iteracji
+heapSort 1000000 369254900ns 1500000 iteracji
+heapSort 1000000 386444400ns 1500000 iteracji
+heapSort 1000000 358784400ns 1500000 iteracji
+heapSort 1000000 339788100ns 1500000 iteracji
+bubbleSort 100 2369000ns 4905 iteracji
+bubbleSort 100 2388400ns 4905 iteracji
+heapSort 1000000 344887400ns 1500000 iteracji
+heapSort 1000000 523517900ns 1500000 iteracji
+heapSort 1000000 496226800ns 1500000 iteracji
+heapSort 1000000 603301000ns 1500000 iteracji
+heapSort 1000000 341175600ns 1500000 iteracji
+heapSort 1000000 349307700ns 1500000 iteracji
+countingSort 1000000 18731700ns 2000 iteracji
+countingSort 1000000 19545700ns 2000 iteracji
