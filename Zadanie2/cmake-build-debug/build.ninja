@@ -41,37 +41,37 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = C$:/Users/huber/Desktop/0STUDIA/SDIZO/SDiZO/Zadanie2/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target Zadanie2
+# Object build statements for EXECUTABLE target Zadanie1
 
 
 #############################################
-# Order-only phony target for Zadanie2
+# Order-only phony target for Zadanie1
 
-build cmake_object_order_depends_target_Zadanie2: phony || CMakeFiles/Zadanie2.dir
+build cmake_object_order_depends_target_Zadanie1: phony || CMakeFiles/Zadanie1.dir
 
-build CMakeFiles/Zadanie2.dir/main.cpp.obj: CXX_COMPILER__Zadanie2_Debug C$:/Users/huber/Desktop/0STUDIA/SDIZO/SDiZO/Zadanie2/main.cpp || cmake_object_order_depends_target_Zadanie2
-  DEP_FILE = CMakeFiles\Zadanie2.dir\main.cpp.obj.d
+build CMakeFiles/Zadanie1.dir/main.cpp.obj: CXX_COMPILER__Zadanie1_Debug C$:/Users/huber/Desktop/0STUDIA/SDIZO/SDiZO/Zadanie2/main.cpp || cmake_object_order_depends_target_Zadanie1
+  DEP_FILE = CMakeFiles\Zadanie1.dir\main.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\Zadanie2.dir
-  OBJECT_FILE_DIR = CMakeFiles\Zadanie2.dir
+  OBJECT_DIR = CMakeFiles\Zadanie1.dir
+  OBJECT_FILE_DIR = CMakeFiles\Zadanie1.dir
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target Zadanie2
+# Link build statements for EXECUTABLE target Zadanie1
 
 
 #############################################
-# Link the executable Zadanie2.exe
+# Link the executable Zadanie1.exe
 
-build Zadanie2.exe: CXX_EXECUTABLE_LINKER__Zadanie2_Debug CMakeFiles/Zadanie2.dir/main.cpp.obj
+build Zadanie1.exe: CXX_EXECUTABLE_LINKER__Zadanie1_Debug CMakeFiles/Zadanie1.dir/main.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  OBJECT_DIR = CMakeFiles\Zadanie2.dir
+  OBJECT_DIR = CMakeFiles\Zadanie1.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_FILE = Zadanie2.exe
-  TARGET_IMPLIB = libZadanie2.dll.a
-  TARGET_PDB = Zadanie2.exe.dbg
+  TARGET_FILE = Zadanie1.exe
+  TARGET_IMPLIB = libZadanie1.dll.a
+  TARGET_PDB = Zadanie1.exe.dbg
 
 
 #############################################
@@ -99,7 +99,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
-build Zadanie2: phony Zadanie2.exe
+build Zadanie1: phony Zadanie1.exe
 
 # =============================================================================
 # Folder targets.
@@ -109,7 +109,7 @@ build Zadanie2: phony Zadanie2.exe
 #############################################
 # Folder: C:/Users/huber/Desktop/0STUDIA/SDIZO/SDiZO/Zadanie2/cmake-build-debug
 
-build all: phony Zadanie2.exe
+build all: phony Zadanie1.exe
 
 # =============================================================================
 # Built-in targets

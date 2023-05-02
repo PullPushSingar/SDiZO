@@ -87,64 +87,66 @@ long long bucketSort(int* arr, int n , int counter){
 int main() {
 
 
-        const Config config = readCfgFile(R"(..\Config.cfg)");
-        long long timer;
-        std::thread main_thread((std::this_thread::get_id());
-        vector<int> Numbers = readCsvFile(config.numbersFilePath);
-        int *arrayOfNumbers = createIntArrayFromVector(Numbers, config.numberOfElements);
-        startTimer();
-        long long numberOfIterations = 0;
-        cout << "Program sortuje algorytmem " << config.algorithmName << endl;
-        cout << "Porgram sortuje " << config.numberOfElements << " liczb" << endl;
-        std::thread animationThread(progressAnimation);
-        std::thread timeStopThread(checkTime);
-        if (config.algorithmName == "bubbleSort") {
-            numberOfIterations = bubbleSort(arrayOfNumbers, config.numberOfElements);
-        } else if (config.algorithmName == "insertSort") {
-            numberOfIterations = insertSort(arrayOfNumbers, config.numberOfElements);
-        } else if (config.algorithmName == "selectionSort") {
-            numberOfIterations = selectionSort(arrayOfNumbers, config.numberOfElements);
-        } else if (config.algorithmName == "cocktailSort") {
-            numberOfIterations = cocktailSort(arrayOfNumbers, config.numberOfElements);
-        } else if (config.algorithmName == "bogoSort") {
-            numberOfIterations = bogoSort(arrayOfNumbers, config.numberOfElements);
-        } else if (config.algorithmName == "heapSort") {
-            numberOfIterations = heapSort(arrayOfNumbers, config.numberOfElements);
-        } else if (config.algorithmName == "quickSort") {
-            int n = sizeof(int) * config.numberOfElements / sizeof(arrayOfNumbers[0]);
-            numberOfIterations = quickSort(arrayOfNumbers, 0, n - 1);
-        } else if (config.algorithmName == "combSort") {
-            numberOfIterations = combSort(arrayOfNumbers, config.numberOfElements);
-        } else if (config.algorithmName == "countingSort") {
-            numberOfIterations = countSort(arrayOfNumbers, config.numberOfElements);
-        } else if (config.algorithmName == "bucketSort") {
-            numberOfIterations = bucketSort(arrayOfNumbers,config.numberOfElements,10);
-        } else {
-            cout << "Podano zly algorytm";
-            exit(100);
-        }
-        timer = stopTimer();
-        timeStopThread.detach();
-        animationThread.detach();
+            const Config config = readCfgFile(R"(..\Config.cfg)");
+            long long timer;
 
-        if (isSorted(arrayOfNumbers, config.numberOfElements)) {
-            cout << "Sortowanie Przebieglo prawidlowo" << endl;
-        } else {
-            cout << "Sortowanie przebieglo niepoprawnie" << endl;
-        }
+            vector<int> Numbers = readCsvFile(config.numbersFilePath);
+            int *arrayOfNumbers = createIntArrayFromVector(Numbers, config.numberOfElements);
+            startTimer();
+            long long numberOfIterations = 0;
+            cout << "Program sortuje algorytmem " << config.algorithmName << endl;
+            cout << "Porgram sortuje " << config.numberOfElements << " liczb" << endl;
+            std::thread animationThread(progressAnimation);
+            std::thread timeStopThread(checkTime);
+            if (config.algorithmName == "bubbleSort") {
+                numberOfIterations = bubbleSort(arrayOfNumbers, config.numberOfElements);
+            } else if (config.algorithmName == "insertSort") {
+                numberOfIterations = insertSort(arrayOfNumbers, config.numberOfElements);
+            } else if (config.algorithmName == "selectionSort") {
+                numberOfIterations = selectionSort(arrayOfNumbers, config.numberOfElements);
+            } else if (config.algorithmName == "cocktailSort") {
+                numberOfIterations = cocktailSort(arrayOfNumbers, config.numberOfElements);
+            } else if (config.algorithmName == "bogoSort") {
+                numberOfIterations = bogoSort(arrayOfNumbers, config.numberOfElements);
+            } else if (config.algorithmName == "heapSort") {
+                numberOfIterations = heapSort(arrayOfNumbers, config.numberOfElements);
+            } else if (config.algorithmName == "quickSort") {
+                int n = sizeof(int) * config.numberOfElements / sizeof(arrayOfNumbers[0]);
+                numberOfIterations = quickSort(arrayOfNumbers, 0, n - 1);
+            } else if (config.algorithmName == "combSort") {
+                numberOfIterations = combSort(arrayOfNumbers, config.numberOfElements);
+            } else if (config.algorithmName == "countingSort") {
+                numberOfIterations = countSort(arrayOfNumbers, config.numberOfElements);
+            } else if (config.algorithmName == "bucketSort") {
+                numberOfIterations = bucketSort(arrayOfNumbers, config.numberOfElements, 10);
+            } else {
+                cout << "Podano zly algorytm";
+                exit(100);
+            }
+            timer = stopTimer();
+            timeStopThread.detach();
+            animationThread.detach();
+
+            if (isSorted(arrayOfNumbers, config.numberOfElements)) {
+                cout << "Sortowanie Przebieglo prawidlowo" << endl;
+            } else {
+                cout << "Sortowanie przebieglo niepoprawnie" << endl;
+            }
 
 
-        cout << "Sortowanie zajelo " << timer << " ns " << endl;
-        cout << "Sortowanie zajelo " << numberOfIterations << " iteracji" << endl;
-        saveArrayToCsv(config, arrayOfNumbers, config.numberOfElements);
-        saveTimeToScv(config, timer, numberOfIterations);
-        if (timer <= TIME_STOP_NANO_SECONDS/300){
-            cout << "Sortowanie zajeło bardzo krótko" << endl;
-            cout << "Nacisnij jaki kolwiek przycisk na klawiaturze aby kontynuowac" << endl;
-            ::getchar();
+            cout << "Sortowanie zajelo " << timer << " ns " << endl;
+            cout << "Sortowanie zajelo " << numberOfIterations << " iteracji" << endl;
+            saveArrayToCsv(config, arrayOfNumbers, config.numberOfElements);
+            saveTimeToScv(config, timer, numberOfIterations);
+            delete[] arrayOfNumbers;
 
-        }
-        delete[] arrayOfNumbers;
+
+
+        cout << "Nacisnij jaki kolwiek przycisk na klawiaturze aby kontynuowac" << endl;
+        ::getchar();
+
+
+       delete[] arrayOfNumbers;
     
     return 0;
 }
@@ -370,10 +372,10 @@ void saveTimeToScv(Config config, long long time, long long numberOfIteration) {
 }
 void progressAnimation() {
 
-    std::system("cls");
+
     int anime = 0;
     while (true){
-        system("cls");
+        std::this_thread::sleep_for(std::chrono::seconds(5));
         if (anime == 0){
             cout << "    +---+  \n";
             cout << "        |  \n";
@@ -424,11 +426,13 @@ void progressAnimation() {
             cout << "       === \n";
         }else if (anime > 6) {
             anime = 0;
+            std::system("cls");
 
 
         }
 
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+
+
 
 
         anime +=1;
@@ -468,7 +472,7 @@ void heapify(int *arr, int n, int i) {
 long long heapSort(int *arr, int n) {
     long long iteration = 0;
 
-    for (int i = (n/2) - 1; i >= 0; i--) {
+    for (int i = n/2 - 1; i >= 0; i--) {
         heapify(arr, n, i);
         iteration +=1;
 
@@ -541,18 +545,23 @@ int getMin(int *arr, int n) {
     return  min;
 }
 long long countSort(int *arr, int n) {
+    long long iteration = 0;
     int min = getMin(arr,n);
     int max = getMax(arr,n);
 
     int size = max-min+1;
     int * tab =new int[size];
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < size; i++) {
+        iteration += 1;
         tab[i] = 0;
+    }
     int shift;
     if (min<0){
         shift=min;
+        iteration +=1;
     }else{
         shift=0;
+        iteration +=1;
     }
     for (int i = 0; i < n; ++i)
         tab[arr[i] - shift]++;
