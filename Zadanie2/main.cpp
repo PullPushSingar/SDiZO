@@ -123,8 +123,7 @@ int main() {
             exit(100);
         }
         timer = stopTimer();
-        timeStopThread.detach();
-        animationThread.detach();
+
 
         if (isSorted(arrayOfNumbers, config.numberOfElements)) {
             cout << "Sortowanie Przebieglo prawidlowo" << endl;
