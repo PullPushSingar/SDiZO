@@ -80,10 +80,12 @@ int** createIntArrayFromVector(const std::vector<int>& vec, int n);
 void MSTGraphGenerator(int n, int weightMin, int weightMax, string filename);
 void saveResultsToCsv(Config config, vector<string> paths);
 void saveTimeToScv(Config config, long long time, int MST);
+void saveTimeToScv(Config config, long long time, int MST, int percents);
 bool isGraphValid(int **graph, const int n);
 int** truncateEdges(int **graph,const  int edgeCount, const int n,const Config cfg);
 bool isConnected(int** graph,const int  n);
 void calcuateMSTWithKruskal(const Config cfg,int ** arr);
+void calcuateMSTWithKruskal(const Config cfg,int ** arr,int percentaege);
 
 int main() {
     const Config cfg = readCfgFile(R"(..\Config.cfg)");
@@ -96,20 +98,15 @@ int main() {
     vector<int> Numbers = readCsvFile(cfg.numbersFilePath);
     int **arr = createIntArrayFromVector(Numbers,cfg.numberOfElements);
 
-    if(!isGraphValid(arr,cfg.numberOfElements)){
-        cout << "Zakończono program z powodwu odczytania grafu w złek postaci !!!"<< endl;
-    }
 
     if (cfg.deleteEges) {
         srand(time(0));
         int random = rand() % 9 + 1;
 
-        arr = truncateEdges(arr, random * cfg.numberOfElements, cfg.numberOfElements,cfg);
+        arr = truncateEdges(arr,  cfg.numberOfElements/random, cfg.numberOfElements,cfg);
         cout << "Program usunal " <<  random * 10 << " % krawedzi grafu" << endl;
-        if (!isGraphValid(arr, cfg.numberOfElements)) {
-            cout << "Zakończono program z powodwu odczytania grafu w złek postaci !!!" << endl;
-        }
-        calcuateMSTWithKruskal(cfg, arr);
+
+        calcuateMSTWithKruskal(cfg, arr,random * 10);
     }else {
         calcuateMSTWithKruskal(cfg,arr);
     }
@@ -372,7 +369,18 @@ void saveTimeToScv(Config config, long long time, int MST) {
     path = config.timeResultPath + "\\TimeAndMST.csv";
     std::ofstream outfile;
     outfile.open(path, ios::app);
-    outfile  << config.algorithmName << " " << std::to_string(config.numberOfElements) << " MST wynosi << " << MST  <<" " << std::to_string(time) << " ns " << "\n";
+    outfile  << config.algorithmName << " " << std::to_string(config.numberOfElements) << "  " << MST  <<" " << std::to_string(time) << " ns " << "\n";
+    outfile.close();
+
+}
+
+void saveTimeToScv(Config config, long long time, int MST,int percents) {
+    string path;
+
+    path = config.timeResultPath + "\\TimeAndMST.csv";
+    std::ofstream outfile;
+    outfile.open(path, ios::app);
+    outfile  << config.algorithmName << " " << std::to_string(config.numberOfElements) << "  " << MST  <<" " << std::to_string(time) << " ns "  << percents << " % " << endl;
     outfile.close();
 
 }
@@ -497,8 +505,8 @@ int** truncateEdges(int **graph,const  int edgeCount, const int n,const Config c
 
         if (isConnected(graph,n)) {
             int random = rand() + 5 % cfg.maxWeight;
-            graph[row][col] = random;
-            graph[col][row] = random;
+            graph[row][col] = 1;
+            graph[col][row] = 1;
         }
 
 
@@ -569,4 +577,32 @@ void calcuateMSTWithKruskal(const Config cfg,int ** arr){
 
     cout << "Nacisnij dwukrotnie Enter aby zakonczyc program " << endl;
     ::getchar();
+}
+
+void calcuateMSTWithKruskal(const Config cfg,int ** arr, int percentaege){
+long long timer = 0;
+
+startTimer();
+std::thread animationThread(progressAnimation);
+std::thread timeStopThread(checkTime);
+vector<Edge> edges = simmetricalToEdge(arr,cfg.numberOfElements);
+vector<Edge> mst = kruskal(edges, cfg.numberOfElements,cfg);
+timer = stopTimer();
+
+timeStopThread.detach();
+animationThread.detach();
+
+
+cout << "Szukanie MST o wielkosci danych " << cfg.numberOfElements << " zajelo " << timer << "ns " << percentaege << " %"<<endl;
+
+int sum = 0;
+for (Edge& e : mst) {
+sum +=e.weight;
+}
+saveTimeToScv(cfg,timer,sum,percentaege);
+cout << "MST : " << sum << endl;
+
+
+cout << "Nacisnij dwukrotnie Enter aby zakonczyc program " << endl;
+::getchar();
 }
