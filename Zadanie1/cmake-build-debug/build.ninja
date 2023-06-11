@@ -65,8 +65,8 @@ build CMakeFiles/Zadanie1.dir/main.cpp.obj: CXX_COMPILER__Zadanie1_Debug C$:/Use
 
 build Zadanie1.exe: CXX_EXECUTABLE_LINKER__Zadanie1_Debug CMakeFiles/Zadanie1.dir/main.cpp.obj
   FLAGS = -g
-  LINK_FLAGS = -static
-  LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_FLAGS = -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive
+  LINK_LIBRARIES = -static-libgcc -static-libstdc++ -lwsock32 -lws2_32
   OBJECT_DIR = CMakeFiles\Zadanie1.dir
   POST_BUILD = cd .
   PRE_LINK = cd .

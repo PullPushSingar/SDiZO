@@ -368,3 +368,4 @@ countingSort 1000000 19112500ns 2000 iteracji
 countingSort 1000000 47224900ns 2000 iteracji
 countingSort 1000000 30425900ns 2000 iteracji
 countingSort 1000000 25185300ns 2000 iteracji
+countingSort 1000000 21064400ns 2000 iteracji
