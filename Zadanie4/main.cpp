@@ -83,9 +83,9 @@ int main() {
 
     delete[] vertexs;
 
-//    cout << "Zakończono program naciśnij aby kontynuować " << endl;
-//    cout << "Nacisnij dwukrotnie Enter aby zakonczyc program " << endl;
-//    ::getchar();
+    cout << "Zakończono program naciśnij aby kontynuować " << endl;
+    cout << "Nacisnij dwukrotnie Enter aby zakonczyc program " << endl;
+    ::getchar();
 
     return 0;
 }
